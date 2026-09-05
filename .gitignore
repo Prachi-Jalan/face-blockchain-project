@@ -1,2 +1,9 @@
 .DS_Store
 .env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Generated search results
+result.json
