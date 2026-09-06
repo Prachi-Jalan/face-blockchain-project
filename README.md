@@ -208,14 +208,11 @@ python -m blockchain.verify verify --record-file results/_manual/blockchain_reco
 python -m blockchain.verify verify --record-file results/_manual/blockchain_record.json --tamper-url "https://example.com/different"
 ```
 
-### Offline demo (no testnet, no config)
+### Offline (no testnet, no config)
 
-```bash
-python -m blockchain.demo_local
-```
-
-Deploys in-process, records a real `test_images/` picture, re-verifies (VERIFIED),
-then re-verifies a 1-byte-changed copy (NOT VERIFIED) - all in one run.
+Leave `RPC_URL` unset and run `python pipeline.py` - Part 3 uses an in-process
+`eth-tester` chain (auto-deployed), so the full hash -> upload -> lookup -> verify
+flow runs with no wallet, funds or network. The record lives only for that run.
 
 ---
 
@@ -249,7 +246,6 @@ STATUS: VERIFIED
 ```bash
 python -m blockchain.tests.test_hashing        # determinism: same->same, image/url/timestamp->different
 python -m blockchain.tests.test_chain_local    # connect / upload / confirm / lookup / verify / tamper (in-process EVM)
-python -m blockchain.demo_local                # full Part 3 flow incl. VERIFIED + NOT VERIFIED
 ```
 
 (They also run under `pytest blockchain/tests/` if pytest is installed.)
@@ -260,7 +256,7 @@ python -m blockchain.demo_local                # full Part 3 flow incl. VERIFIED
 
 - **LOCAL mode is single-process.** The `eth-tester` chain lives inside one Python
   process, so a record made by one command is gone in the next. Same-process
-  re-verification works (`demo_local.py`, one `pipeline.py` run). Cross-process
+  re-verification works (one `pipeline.py` run). Cross-process
   `blockchain.verify verify` needs a persistent chain - use a testnet (or your own
   local node) via `RPC_URL`.
 - **Re-verification needs the original image bytes.** `blockchain_record.json`
@@ -274,6 +270,6 @@ python -m blockchain.demo_local                # full Part 3 flow incl. VERIFIED
   the fingerprint records exactly what was discovered.
 - **Part 2 requires external credentials** (`SERPAPI_API_KEY`, Google Cloud auth);
   without them the full `pipeline.py` cannot run, but Part 3 can be exercised via
-  `blockchain.demo_local` / `blockchain.verify demo`.
+  `blockchain.verify demo` and the `blockchain.tests` modules.
 - Gas price uses a single `eth_gas_price` reading with no bump/retry; on a
   congested testnet a transaction may need to be re-sent.

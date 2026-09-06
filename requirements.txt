@@ -33,7 +33,7 @@ web3==7.16.0             # Ethereum interaction (pulls in eth-account, eth-abi, 
 py-solc-x==2.0.5         # compile blockchain/contract.sol from Python
 python-dotenv==1.2.3     # load .env (RPC_URL / PRIVATE_KEY / CONTRACT_ADDRESS)
 
-# Optional - only for the offline, no-testnet demo (`python -m blockchain.demo_local`
-# and `python pipeline.py` with no RPC_URL). Provides an in-process EVM.
+# Optional - only for the offline, no-testnet path (`python pipeline.py` with no
+# RPC_URL, and the blockchain.tests modules). Provides an in-process EVM.
 eth-tester==0.14.0b1
 py-evm==0.12.1b1
