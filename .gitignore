@@ -10,3 +10,7 @@ result.json
 results/
 __pycache__/
 *.pyc
+
+# Part 3 (blockchain) - local artifacts
+blockchain_record.json
+.solcx/
