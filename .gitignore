@@ -7,3 +7,6 @@ __pycache__/
 
 # Generated search results
 result.json
+results/
+__pycache__/
+*.pyc

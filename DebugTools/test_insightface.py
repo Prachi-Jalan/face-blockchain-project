@@ -1,3 +1,4 @@
+#test_insightface
 import cv2
 from insightface.app import FaceAnalysis
 

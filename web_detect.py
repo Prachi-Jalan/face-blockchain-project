@@ -1,3 +1,4 @@
+#web_detect
 import base64
 import json
 import subprocess

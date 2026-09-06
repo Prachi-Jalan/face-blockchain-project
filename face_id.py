@@ -1,3 +1,4 @@
+#face_id
 import cv2
 import numpy as np
 from insightface.app import FaceAnalysis
@@ -31,13 +32,13 @@ def compare_faces(embedding1, embedding2, threshold=0.5):
     cosine_sim = np.dot(embedding1, embedding2) / (
         np.linalg.norm(embedding1) * np.linalg.norm(embedding2)
     )
-    is_match = cosine_sim >= threshold
+    is_match = bool(cosine_sim >= threshold)
     return is_match, float(cosine_sim)
 
 
 if __name__ == "__main__":
-    emb1 = get_embedding("test_images/test7.jpg")
-    emb2 = get_embedding("test_images/test6.jpg")
+    emb1 = get_embedding("test_images/test5.jpg")
+    emb2 = get_embedding("test_images/test7.jpg")
 
     if emb1 is None or emb2 is None:
         print("Could not detect a face in one or both images.")
