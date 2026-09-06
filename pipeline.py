@@ -146,6 +146,23 @@ def run_pipeline_fast(scan_image_path, max_workers=5):
     if confirmed_match:
         result = {"url": confirmed_match["url"], "score": confirmed_match["score"], "image_path": confirmed_match["path"]}
         print(f"Match: {result['url']} (score: {result['score']:.4f})")
+
+        # --- Part 3: blockchain verification of the confirmed match ---
+        # Hash (matched image bytes + URL + timestamp) -> upload to chain -> look it
+        # back up -> recompute locally -> report VERIFIED / NOT VERIFIED.
+        # Non-fatal: if the chain/config is unavailable, Parts 1-2 output is unaffected.
+        # Set ENABLE_BLOCKCHAIN=0 to skip this step entirely.
+        if os.getenv("ENABLE_BLOCKCHAIN", "1").strip().lower() not in ("0", "false", "no"):
+            try:
+                from blockchain.verify import record_and_verify
+                result["blockchain"] = record_and_verify(
+                    image_path=result["image_path"],
+                    url=result["url"],
+                    output_dir=output_dir,
+                )
+            except Exception as e:
+                print(f"[blockchain] Part 3 step failed (pipeline continues): {e}")
+                result["blockchain"] = {"status": "error", "error": str(e)}
     else:
         print("No confirmed match found, even after og:image fallback.")
 
@@ -162,5 +179,15 @@ def run_pipeline_fast(scan_image_path, max_workers=5):
 
 
 if __name__ == "__main__":
-    result = run_pipeline_fast("test_images/test7.jpg")
+    import sys
+
+    # Usage:  python pipeline.py [path/to/scan_image.jpg]
+    # Defaults to the bundled sample if no path is given.
+    scan_image = sys.argv[1] if len(sys.argv) > 1 else "test_images/test7.jpg"
+
+    if not os.path.isfile(scan_image):
+        print(f"Image not found: {scan_image}")
+        sys.exit(1)
+
+    result = run_pipeline_fast(scan_image)
     print("\nFinal result:", result)
