@@ -142,9 +142,9 @@ def lookup_verification_record(record_id, w3=None, contract=None, contract_addre
             raise RuntimeError(
                 "Could not read the record from the LOCAL chain. The eth-tester chain is "
                 "in-process, so a record created in one `python ...` run does NOT exist in a "
-                "later, separate run. For same-process re-verification see "
-                "`python -m blockchain.demo_local`; for cross-process re-verification set "
-                "RPC_URL to a real testnet (or a persistent local node) in .env."
+                "later, separate run. For cross-process re-verification set RPC_URL to a real "
+                "testnet (or a persistent local node) in .env; for a single-process check, "
+                "verify inside the same run that created the record."
             ) from e
         raise RuntimeError(
             f"Could not read record #{record_id} from the chain. Check CONTRACT_ADDRESS and "
@@ -337,8 +337,7 @@ def _cli():
         print(
             "NOTE: running in LOCAL mode (no RPC_URL). The in-process test chain does not\n"
             "persist between separate runs, so this standalone re-verification needs a\n"
-            "persistent chain. Either set RPC_URL in .env (testnet), or use\n"
-            "`python -m blockchain.demo_local` which does record + re-verify in one process.\n"
+            "persistent chain. Set RPC_URL in .env (a testnet) and re-run.\n"
         )
 
     overrides = {}
